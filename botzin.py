@@ -99,7 +99,7 @@ async def send_aviso(ctx, nome: str):
         await ctx.send("Aviso não encontrado.")
 
 
-@task.loop(minutes=1)
+@tasks.loop(minutes=1)
 async def verificar_avisos():
     if not CHANNEL_ID:
         return

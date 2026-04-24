@@ -1,0 +1,116 @@
+import json
+import os
+from typing import Dict, Any, Optional
+from dataclasses import dataclass, asdict
+
+
+@dataclass
+class Aviso:
+    nome: str
+    mensagem: str
+    tipo: str = "aviso"
+
+
+@dataclass
+class Evento:
+    nome: str
+    mensagem: str
+    data: Optional[str] = None
+    hora: Optional[str] = None
+    ativo: bool = True
+
+
+class Database:
+    _instance = None
+    _avisos: Dict[str, Aviso] = {}
+    _eventos: Dict[str, Evento] = {}
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._load()
+        return cls._instance
+
+    def _get_data_path(self, name: str) -> str:
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base, "data", f"{name}.json")
+
+    def _load(self):
+        os.makedirs(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data"), exist_ok=True)
+
+        for tipo, colecao in [("avisos", self._avisos), ("eventos", self._eventos)]:
+            path = self._get_data_path(tipo)
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    for k, v in data.items():
+                        if tipo == "avisos":
+                            colecao[k] = Aviso(**v)
+                        else:
+                            colecao[k] = Evento(**v)
+
+    def _save(self, tipo: str):
+        path = self._get_data_path(tipo)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self._get_collection(tipo), f, ensure_ascii=False, indent=2, default=str)
+
+    def _get_collection(self, tipo: str) -> Dict[str, Any]:
+        if tipo == "avisos":
+            return {k: asdict(v) for k, v in self._avisos.items()}
+        return {k: asdict(v) for k, v in self._eventos.items()}
+
+    def add_aviso(self, nome: str, mensagem: str) -> bool:
+        if nome in self._avisos:
+            return False
+        self._avisos[nome] = Aviso(nome=nome, mensagem=mensagem)
+        self._save("avisos")
+        return True
+
+    def get_aviso(self, nome: str) -> Optional[Aviso]:
+        return self._avisos.get(nome)
+
+    def list_avisos(self) -> Dict[str, Aviso]:
+        return self._avisos.copy()
+
+    def delete_aviso(self, nome: str) -> bool:
+        if nome in self._avisos:
+            del self._avisos[nome]
+            self._save("avisos")
+            return True
+        return False
+
+    def add_evento(self, nome: str, mensagem: str, data: str = None, hora: str = None) -> bool:
+        if nome in self._eventos:
+            return False
+        self._eventos[nome] = Evento(nome=nome, mensagem=mensagem, data=data, hora=hora)
+        self._save("eventos")
+        return True
+
+    def get_evento(self, nome: str) -> Optional[Evento]:
+        return self._eventos.get(nome)
+
+    def list_eventos(self) -> Dict[str, Evento]:
+        return self._eventos.copy()
+
+    def update_evento(self, nome: str, **kwargs) -> bool:
+        if nome in self._eventos:
+            evento = self._eventos[nome]
+            for key, value in kwargs.items():
+                if hasattr(evento, key):
+                    setattr(evento, key, value)
+            self._save("eventos")
+            return True
+        return False
+
+    def delete_evento(self, nome: str) -> bool:
+        if nome in self._eventos:
+            del self._eventos[nome]
+            self._save("eventos")
+            return True
+        return False
+
+    def get_eventos_ativos(self) -> Dict[str, Evento]:
+        return {k: v for k, v in self._eventos.items() if v.ativo}
+
+
+db = Database()

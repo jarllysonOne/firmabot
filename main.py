@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 import discord
 from discord.ext import commands, tasks
 from utils import config, db, EmbedBuilder
@@ -41,7 +42,7 @@ def main():
     async def on_command_error(ctx, error):
         if isinstance(error, commands.CommandNotFound):
             return
-
+        
         if isinstance(error, commands.MissingRequiredArgument):
             embed = EmbedBuilder.error(
                 "Argumento Faltante",
@@ -50,6 +51,8 @@ def main():
             await ctx.send(embed=embed)
             return
 
+        traceback.print_exception(type(error), error, error.__traceback__)
+        
         embed = EmbedBuilder.error(
             "Erro no Comando",
             str(error)

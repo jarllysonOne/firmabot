@@ -57,7 +57,6 @@ class EmbedBuilder:
             titulo=titulo,
             descricao=descricao,
             cor=discord.Color.green(),
-            footer_text="✅ Operação realizada com sucesso",
             **kwargs
         )
 
@@ -67,7 +66,6 @@ class EmbedBuilder:
             titulo=titulo,
             descricao=descricao,
             cor=discord.Color.red(),
-            footer_text="❌ Ocorreu um erro",
             **kwargs
         )
 
@@ -77,7 +75,6 @@ class EmbedBuilder:
             titulo=titulo,
             descricao=descricao,
             cor=discord.Color.orange(),
-            footer_text="⚠️ Atenção",
             **kwargs
         )
 
@@ -87,23 +84,23 @@ class EmbedBuilder:
             titulo=titulo,
             descricao=descricao,
             cor=discord.Color.blue(),
-            footer_text="ℹ️ Informações",
             **kwargs
         )
 
     @staticmethod
-    def event(titulo: str, descricao: str, data: str = "", **kwargs) -> discord.Embed:
-        fields = [
-            {"name": "📅 Data", "value": f"**{data}**", "inline": True},
-        ]
-        if kwargs.get("hora"):
-            fields.insert(0, {"name": "🕐 Horário", "value": f"**{kwargs.pop('hora')}**", "inline": True})
+    def evento(titulo: str, descricao: str, data: str = "", hora: str = "", campos=None, **kwargs) -> discord.Embed:
+        fields = []
+        if data:
+            fields.append({"name": "📅 Data", "value": f"**{data}**", "inline": True})
+        if hora:
+            fields.append({"name": "🕐 Horário", "value": f"**{hora}**", "inline": True})
+        if campos:
+            fields.extend(campos)
 
         return EmbedBuilder.create(
-            titulo=titulo,
+            titulo="🎭 " + titulo,
             descricao=descricao,
-            cor=discord.Color.purple(),
-            footer_text="🎭 Eventos do Servidor",
+            cor=discord.Color.magenta(),
             fields=fields,
             **kwargs
         )
@@ -111,9 +108,8 @@ class EmbedBuilder:
     @staticmethod
     def aviso(titulo: str, descricao: str, **kwargs) -> discord.Embed:
         return EmbedBuilder.create(
-            titulo=titulo,
+            titulo="📢 " + titulo,
             descricao=descricao,
-            cor=discord.Color.yellow(),
-            footer_text="📢 Avisos",
+            cor=discord.Color.gold(),
             **kwargs
         )

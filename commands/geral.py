@@ -11,7 +11,6 @@ class ComandosGerais(commands.Cog):
         latency = round(self.bot.latency * 1000)
         
         if latency < 100:
-            cor = EmbedBuilder.success.__self__.__class__.color
             emoji = "🟢"
         elif latency < 200:
             emoji = "🟡"
@@ -50,10 +49,10 @@ class ComandosGerais(commands.Cog):
             cor_dinamica=True,
             footer_text="Use o prefixo ! para executar comandos",
             fields=[
-                {"name": "📢 Avisos", "value": "`!aviso nome | mensagem`\n`!listar_avisos`\n`!enviar_aviso nome [everyone]`\n`!del_aviso nome`", "inline": False},
-                {"name": "🎭 Eventos", "value": "`!evento nome | data | mensagem`\n`!aviso_hora HH:MM | nome | msg`\n`!listar_eventos`\n`!cancelar nome`\n`!ativar nome`", "inline": False},
-                {"name": "📣 Menções", "value": "`!everyone msg` - Marque @everyone\n`!aqui msg` - Marque @here\n`!filtrar @cargo` - Filtre membros\n`!mencionar idcargo msg`", "inline": False},
-                {"name": "🔧 Geral", "value": "`!ping` - Ver latência\n`!info` - Informações do bot\n`!help` - Esta mensagem", "inline": False}
+                {"name": "📢 Avisos", "value": "`!aviso` - Criar aviso\n`!listar_avisos`", "inline": False},
+                {"name": "🎭 Eventos", "value": "`!evento` - Criar evento", "inline": False},
+                {"name": "📣 Menções", "value": "`!everyone msg` - Marque @everyone\n`!aqui msg` - Marque @here\n`!filtrar @cargo`", "inline": False},
+                {"name": "🔧 Geral", "value": "`!ping` - Ver latência\n`!info` - Informações\n`!ajuda` - Esta mensagem", "inline": False}
             ]
         )
         await ctx.send(embed=embed)

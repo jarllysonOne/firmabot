@@ -1,0 +1,30 @@
+{
+  "! evento nome": {
+    "nome": "! evento nome",
+    "mensagem": "descrição",
+    "data": "data",
+    "hora": null,
+    "ativo": true,
+    "participantes": []
+  },
+  "jasinho": {
+    "nome": "jasinho",
+    "mensagem": "espero voce la",
+    "data": "29/12",
+    "hora": null,
+    "ativo": true,
+    "participantes": [
+      "<@429267338358030336>"
+    ]
+  },
+  "ola": {
+    "nome": "ola",
+    "mensagem": "ola",
+    "data": "29.12",
+    "hora": null,
+    "ativo": true,
+    "participantes": [
+      "<@429267338358030336>"
+    ]
+  }
+}

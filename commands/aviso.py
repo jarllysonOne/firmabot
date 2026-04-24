@@ -1,5 +1,28 @@
 from discord.ext import commands
+from discord import ui, Interaction
 from utils import db, EmbedBuilder
+
+
+class AvisoModal(ui.Modal):
+    def __init__(self):
+        super().__init__(title="📢 Criar Aviso")
+        self.mensagem = ui.TextInput(
+            label="Mensagem",
+            placeholder="Digite o aviso...",
+            style=ui.TextStyle.paragraph,
+            required=True,
+            max_length=2000
+        )
+        self.add_item(self.mensagem)
+
+    async def on_submit(self, interaction):
+        embed = EmbedBuilder.aviso(
+            "📢 Aviso",
+            self.mensagem.value,
+            footer_text=f"Criado por: {interaction.user.display_name}",
+            footer_icon=interaction.user.display_avatar.url if interaction.user.display_avatar else None
+        )
+        await interaction.response.send_message(embed=embed)
 
 
 class ComandosAviso(commands.Cog):
@@ -7,100 +30,16 @@ class ComandosAviso(commands.Cog):
         self.bot = bot
 
     @commands.command(name="aviso")
-    async def create_aviso(self, ctx, *, args: str):
-        try:
-            nome, mensagem = args.split("|")
-            nome = nome.strip()
-            mensagem = mensagem.strip()
-        except ValueError:
-            embed = EmbedBuilder.error(
-                "Formato Inválido",
-                "Use: `!aviso nome | mensagem`"
-            )
-            await ctx.send(embed=embed)
-            return
-
-        if db.add_aviso(nome, mensagem):
-            embed = EmbedBuilder.success(
-                "✅ Aviso Criado",
-                f"**{nome}**\n{mensagem}",
-                fields=[
-                    {"name": "📝 Nome", "value": nome, "inline": True},
-                    {"name": "💬 Mensagem", "value": mensagem, "inline": True}
-                ]
-            )
-        else:
-            embed = EmbedBuilder.warning(
-                "Aviso Existente",
-                f"O aviso **{nome}** já existe no sistema."
-            )
-        await ctx.send(embed=embed)
-
-    @commands.command(name="listar_avisos")
-    async def list_avisos(self, ctx):
-        avisos = db.list_avisos()
-        
-        if not avisos:
-            embed = EmbedBuilder.info(
-                "📋 Avisos",
-                "Nenhum aviso cadastrado no momento."
-            )
-            await ctx.send(embed=embed)
-            return
-
-        items = []
-        for nome, aviso in avisos.items():
-            items.append(f"• **{nome}**: {aviso.mensagem}")
-
-        embed = EmbedBuilder.create(
-            titulo="📋 Lista de Avisos",
-            descricao="\n".join(items),
-            cor_dinamica=True,
-            footer_text=f"Total: {len(avisos)} aviso(s)",
-            fields=[
-                {"name": "📋 Total", "value": f"**{len(avisos)}** avisos cadastrados", "inline": False}
-            ]
-        )
-        await ctx.send(embed=embed)
-
-    @commands.command(name="enviar_aviso")
-    async def enviar_aviso(self, ctx, nome: str, mencionar: str = None):
-        aviso = db.get_aviso(nome)
-        
-        if not aviso:
-            embed = EmbedBuilder.error(
-                "Aviso Não Encontrado",
-                f'O aviso "{nome}" não existe no sistema.'
-            )
-            await ctx.send(embed=embed)
-            return
-
-        embed = EmbedBuilder.aviso(
-            f"📢 Aviso: {nome}",
-            aviso.mensagem,
-            footer_text=f"Avisado por: {ctx.author.display_name}",
-            footer_icon=ctx.author.display_avatar.url if ctx.author.display_avatar else None
-        )
-        
-        mensagem = await ctx.send(embed=embed)
-        
-        if mencionar and mencionar.lower() == "everyone":
-            await ctx.send("@everyone")
-
-    @commands.command(name="del_aviso")
-    async def delete_aviso(self, ctx, nome: str):
-        if db.delete_aviso(nome):
-            embed = EmbedBuilder.success(
-                "🗑️ Aviso Removido",
-                f'O aviso "{nome}" foi removido com sucesso.'
-            )
-        else:
-            embed = EmbedBuilder.error(
-                "Aviso Não Encontrado",
-                f'O aviso "{nome}" não existe no sistema.'
-            )
-        await ctx.send(embed=embed)
+    async def create_aviso(self, ctx):
+        await ctx.message.delete()
+        await ctx.send("📢 **Clique no botão abaixo para criar um aviso:**", view=AvisoView())
 
 
 async def setup(bot):
     await bot.add_cog(ComandosAviso(bot))
+
+
+class AvisoView(ui.View):
+    @ui.button(label="Criar Aviso", style=1, emoji="📢")
+    async def callback(self, interaction, button):
+        await interaction.response.send_modal(AvisoModal())

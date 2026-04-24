@@ -9,6 +9,11 @@ class Aviso:
     nome: str
     mensagem: str
     tipo: str = "aviso"
+    participantes: list = None
+    
+    def __post_init__(self):
+        if self.participantes is None:
+            self.participantes = []
 
 
 @dataclass
@@ -18,6 +23,11 @@ class Evento:
     data: Optional[str] = None
     hora: Optional[str] = None
     ativo: bool = True
+    participantes: list = None
+    
+    def __post_init__(self):
+        if self.participantes is None:
+            self.participantes = []
 
 
 class Database:
@@ -59,10 +69,10 @@ class Database:
             return {k: asdict(v) for k, v in self._avisos.items()}
         return {k: asdict(v) for k, v in self._eventos.items()}
 
-    def add_aviso(self, nome: str, mensagem: str) -> bool:
+    def add_aviso(self, nome: str, mensagem: str, participantes: list = None) -> bool:
         if nome in self._avisos:
             return False
-        self._avisos[nome] = Aviso(nome=nome, mensagem=mensagem)
+        self._avisos[nome] = Aviso(nome=nome, mensagem=mensagem, participantes=participantes or [])
         self._save("avisos")
         return True
 
@@ -79,10 +89,10 @@ class Database:
             return True
         return False
 
-    def add_evento(self, nome: str, mensagem: str, data: str = None, hora: str = None) -> bool:
+    def add_evento(self, nome: str, mensagem: str, data: str = None, hora: str = None, participantes: list = None) -> bool:
         if nome in self._eventos:
             return False
-        self._eventos[nome] = Evento(nome=nome, mensagem=mensagem, data=data, hora=hora)
+        self._eventos[nome] = Evento(nome=nome, mensagem=mensagem, data=data, hora=hora, participantes=participantes or [])
         self._save("eventos")
         return True
 

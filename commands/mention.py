@@ -24,22 +24,6 @@ class ComandosMention(commands.Cog):
         msg = await ctx.send(embed=embed)
         await ctx.send("@everyone")
 
-    @commands.command(name="aqui")
-    async def mention_aqui(self, ctx, *, mensagem: str = None):
-        embed = EmbedBuilder.create(
-            titulo="📍 Menção Aqui",
-            descricao=mensagem or "Atenção!",
-            cor_dinamica=True,
-            footer_text=f"Solicitado por: {ctx.author.display_name}",
-            fields=[
-                {"name": "👤 Solicitante", "value": ctx.author.mention, "inline": True},
-                {"name": "📢 Membros", "value": f"**{ctx.guild.member_count}** membros", "inline": True}
-            ]
-        )
-        
-        msg = await ctx.send(embed=embed)
-        await ctx.send("@here")
-
     @commands.command(name="filtrar")
     async def filtrar_membros(self, ctx, *, args: str = None):
         if not args:

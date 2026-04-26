@@ -43,15 +43,17 @@ class ComandosGerais(commands.Cog):
 
     @commands.command(name="ajuda")
     async def help_command(self, ctx):
+        await ctx.message.delete()
+        
         embed = EmbedBuilder.create(
             titulo="📚 Central de Ajuda",
             descricao="Lista de comandos disponíveis",
             cor_dinamica=True,
             footer_text="Use o prefixo ! para executar comandos",
             fields=[
-                {"name": "📢 Avisos", "value": "`!aviso` - Criar aviso\n`!listar_avisos`", "inline": False},
-                {"name": "🎭 Eventos", "value": "`!evento` - Criar evento", "inline": False},
-                {"name": "📣 Menções", "value": "`!everyone msg` - Marque @everyone\n`!aqui msg` - Marque @here\n`!filtrar @cargo`", "inline": False},
+                {"name": "📢 Avisos", "value": "`!aviso [--everyone/--here] mensagem`", "inline": False},
+                {"name": "🎭 Eventos", "value": "`!evento data|descrição|@menções|lembrete`\n`!eventos` - Listar eventos\n`!encerrar nome`", "inline": False},
+                {"name": "📣 Menções", "value": "`!everyone msg` - Marque @everyone\n`!filtrar @cargo`", "inline": False},
                 {"name": "🔧 Geral", "value": "`!ping` - Ver latência\n`!info` - Informações\n`!ajuda` - Esta mensagem", "inline": False}
             ]
         )

@@ -24,10 +24,17 @@ class Evento:
     hora: Optional[str] = None
     ativo: bool = True
     participantes: list = None
+    confirmados: list = None
+    recusados: list = None
+    lembrete_minutos: int = 15
     
     def __post_init__(self):
         if self.participantes is None:
             self.participantes = []
+        if self.confirmados is None:
+            self.confirmados = []
+        if self.recusados is None:
+            self.recusados = []
 
 
 class Database:
@@ -89,10 +96,10 @@ class Database:
             return True
         return False
 
-    def add_evento(self, nome: str, mensagem: str, data: str = None, hora: str = None, participantes: list = None) -> bool:
+    def add_evento(self, nome: str, mensagem: str, data: str = None, hora: str = None, participantes: list = None, lembrete_minutos: int = 15) -> bool:
         if nome in self._eventos:
             return False
-        self._eventos[nome] = Evento(nome=nome, mensagem=mensagem, data=data, hora=hora, participantes=participantes or [])
+        self._eventos[nome] = Evento(nome=nome, mensagem=mensagem, data=data, hora=hora, participantes=participantes or [], lembrete_minutos=lembrete_minutos)
         self._save("eventos")
         return True
 
@@ -121,6 +128,28 @@ class Database:
 
     def get_eventos_ativos(self) -> Dict[str, Evento]:
         return {k: v for k, v in self._eventos.items() if v.ativo}
+
+    def confirmar_participacao(self, nome: str, user_id: str) -> bool:
+        if nome in self._eventos:
+            evento = self._eventos[nome]
+            if user_id not in evento.confirmados:
+                evento.confirmados.append(user_id)
+                if user_id in evento.recusados:
+                    evento.recusados.remove(user_id)
+            self._save("eventos")
+            return True
+        return False
+
+    def recusar_participacao(self, nome: str, user_id: str) -> bool:
+        if nome in self._eventos:
+            evento = self._eventos[nome]
+            if user_id not in evento.recusados:
+                evento.recusados.append(user_id)
+                if user_id in evento.confirmados:
+                    evento.confirmados.remove(user_id)
+            self._save("eventos")
+            return True
+        return False
 
 
 db = Database()

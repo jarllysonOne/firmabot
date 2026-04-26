@@ -131,7 +131,7 @@ class ComandosEvento(commands.Cog):
         embed.add_field(name="✅ Confirmados", value="**0**", inline=True)
         embed.add_field(name="❌ Recusados", value="**0**", inline=True)
         
-        embed.set_footer(text=f"Criado por: {ctx.author.display_name}", icon=ctx.author.display_avatar.url)
+        embed.set_footer(text=f"Criado por: {ctx.author.display_name}", icon_url=ctx.author.display_avatar.url if ctx.author.display_avatar else None)
         
         view = BotoesRSVP(nome, ctx.author.id)
         self.persisted_views.append(view)

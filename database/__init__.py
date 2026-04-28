@@ -27,6 +27,11 @@ class Evento:
     confirmados: list = None
     recusados: list = None
     lembrete_minutos: int = 15
+    tipo: str = "normal"
+    recorrencia: Optional[str] = None
+    limite_participantes: Optional[int] = None
+    lista_espera: list = None
+    arquivado: bool = False
     
     def __post_init__(self):
         if self.participantes is None:
@@ -35,6 +40,8 @@ class Evento:
             self.confirmados = []
         if self.recusados is None:
             self.recusados = []
+        if self.lista_espera is None:
+            self.lista_espera = []
 
 
 class Database:

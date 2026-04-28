@@ -44,17 +44,42 @@ class ComandosGerais(commands.Cog):
     @commands.command(name="ajuda")
     async def help_command(self, ctx):
         await ctx.message.delete()
-        
+
         embed = EmbedBuilder.create(
             titulo="📚 Central de Ajuda",
-            descricao="Lista de comandos disponíveis",
+            descricao="Lista de comandos disponíveis - Tudo que o bot pode fazer!",
             cor_dinamica=True,
             footer_text="Use o prefixo ! para executar comandos",
             fields=[
-                {"name": "📢 Avisos", "value": "`!aviso [--everyone/--here] mensagem`", "inline": False},
-                {"name": "🎭 Eventos", "value": "`!evento data|descrição|@menções|lembrete`\n`!eventos` - Listar eventos\n`!encerrar nome`", "inline": False},
-                {"name": "📣 Menções", "value": "`!everyone msg` - Marque @everyone\n`!filtrar @cargo`", "inline": False},
-                {"name": "🔧 Geral", "value": "`!ping` - Ver latência\n`!info` - Informações\n`!ajuda` - Esta mensagem", "inline": False}
+                {"name": "📢 Avisos", "value": "`!aviso [--everyone/--here] mensagem`\n`!aviso 25/04|Mensagem` - Aviso agendado", "inline": False},
+                {"name": "🎭 Eventos (Atualizado)", "value":
+                 "`!evento data|desc|@menc|lembrete|--everyone|--limite X|--recorrencia`\n"
+                 "`!eventos` - Listar eventos ativos\n"
+                 "`!editar nome --desc X --data X` - Editar evento\n"
+                 "`!excluir nome` - Excluir evento\n"
+                 "`!encerrar nome` - Encerrar evento", "inline": False},
+                {"name": "📜 Ficha (Novo!)", "value":
+                 "`!ficha @user | Descrição` - Enviar ficha no canal\n"
+                 "`!ficha @user --dm | Descrição` - Enviar ficha por DM\n"
+                 "`!ficha @user URL | Descrição` - Com imagem destacada", "inline": False},
+                {"name": "📊 Enquetes (Novo!)", "value":
+                 "`!enquete Título | Descrição | Opção1 | Opção2 ...`\n"
+                 "Votação interativa com botões e resultados em tempo real!", "inline": False},
+                {"name": "🎵 Música (Novo!)", "value":
+                 "`!play <link/nome>` - Tocar música do YouTube\n"
+                 "`!skip` - Pular música\n"
+                 "`!queue` - Ver fila\n"
+                 "`!pause` / `!resume` - Pausar/Retomar\n"
+                 "`!stop` - Parar e desconectar\n"
+                 "`!nowplaying` - Ver música atual", "inline": False},
+                {"name": "📣 Menções", "value":
+                 "`!everyone msg` - Marque @everyone\n"
+                 "`!filtrar @cargo` - Listar membros do cargo\n"
+                 "`!mencionar ID_cargo` - Mencionar todos do cargo", "inline": False},
+                {"name": "🔧 Geral", "value":
+                 "`!ping` - Ver latência\n"
+                 "`!info` - Informações do bot\n"
+                 "`!ajuda` - Esta mensagem", "inline": False}
             ]
         )
         await ctx.send(embed=embed)

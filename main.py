@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands, tasks
 from utils import config, db, EmbedBuilder
 from utils.tasks import TaskLoop
-from commands import ComandosAviso, ComandosEvento, ComandosGerais, ComandosMention
+from commands import ComandosAviso, ComandosEvento, ComandosGerais, ComandosMention, ComandosFicha, ComandosEnquete, ComandosMusica
 
 
 class BotDiscord(commands.Bot):
@@ -22,6 +22,9 @@ class BotDiscord(commands.Bot):
         await self.add_cog(ComandosEvento(self))
         await self.add_cog(ComandosGerais(self))
         await self.add_cog(ComandosMention(self))
+        await self.add_cog(ComandosFicha(self))
+        await self.add_cog(ComandosEnquete(self))
+        await self.add_cog(ComandosMusica(self))
 
         self.task_loop = TaskLoop(self)
         await self.task_loop.start()

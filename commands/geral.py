@@ -65,13 +65,6 @@ class ComandosGerais(commands.Cog):
                 {"name": "📊 Enquetes (Novo!)", "value":
                  "`!enquete Título | Descrição | Opção1 | Opção2 ...`\n"
                  "Votação interativa com botões e resultados em tempo real!", "inline": False},
-                {"name": "🎵 Música (Novo!)", "value":
-                 "`!play <link/nome>` - Tocar música do YouTube\n"
-                 "`!skip` - Pular música\n"
-                 "`!queue` - Ver fila\n"
-                 "`!pause` / `!resume` - Pausar/Retomar\n"
-                 "`!stop` - Parar e desconectar\n"
-                 "`!nowplaying` - Ver música atual", "inline": False},
                 {"name": "📣 Menções", "value":
                  "`!everyone msg` - Marque @everyone\n"
                  "`!filtrar @cargo` - Listar membros do cargo\n"

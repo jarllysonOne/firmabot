@@ -36,7 +36,8 @@ class ComandosFicha(commands.Cog):
 
         if "|" in descricao:
             partes = descricao.split("|", 1)
-            descricao = partes[1].strip() if len(partes) > 1 else "Ficha atualizada"
+            descricao = partes[1].strip() if len(
+                partes) > 1 else "Ficha atualizada"
 
         if not descricao:
             descricao = "A ficha foi atualizada!"

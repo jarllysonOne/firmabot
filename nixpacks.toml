@@ -1,5 +1,2 @@
-[phases.setup]
-nixPkgs = ["ffmpeg", "ffmpeg.dev", "libsodium", "libopus"]
-
 [phases.build]
 cmds = ["pip install -r requirements.txt"]

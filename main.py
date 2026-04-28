@@ -1,30 +1,11 @@
 import os
 import sys
 import traceback
-import ctypes
 import discord
-
-# Tenta carregar libopus manualmente em ambiente Linux/Railway
-try:
-    discord.opus._load_default()
-except Exception:
-    opus_paths = [
-        "/usr/lib/libopus.so.0",
-        "/usr/lib/x86_64-linux-gnu/libopus.so.0",
-        "/usr/local/lib/libopus.so.0",
-        "libopus.so.0",
-    ]
-    for path in opus_paths:
-        try:
-            ctypes.CDLL(path)
-            discord.opus.load_opus(path)
-            break
-        except Exception:
-            continue
 from discord.ext import commands, tasks
 from utils import config, db, EmbedBuilder
 from utils.tasks import TaskLoop
-from commands import ComandosAviso, ComandosEvento, ComandosGerais, ComandosMention, ComandosFicha, ComandosEnquete, ComandosMusica
+from commands import ComandosAviso, ComandosEvento, ComandosGerais, ComandosMention, ComandosFicha, ComandosEnquete
 
 
 class BotDiscord(commands.Bot):
@@ -43,7 +24,6 @@ class BotDiscord(commands.Bot):
         await self.add_cog(ComandosMention(self))
         await self.add_cog(ComandosFicha(self))
         await self.add_cog(ComandosEnquete(self))
-        await self.add_cog(ComandosMusica(self))
 
         self.task_loop = TaskLoop(self)
         await self.task_loop.start()
